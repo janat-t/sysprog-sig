@@ -22,6 +22,9 @@ char *prompt = "ttsh[%d] " EMOJI_BIRD " ";
 /** Whether or not to show the prompt */
 int show_prompt = 1;
 
+int cur_pid;
+sigset_t set, oset;
+
 /** Checks whether two given strings are the same. */
 bool streql(const char *lhs, const char *rhs) {
     return (lhs == NULL && rhs == NULL) ||
@@ -46,13 +49,16 @@ int invoke_node(node_t *node) {
     // Checks whether the command is executed with '&'
     if (node->async) {
         LOG("{&} found: async execution required");
+        sigprocmask(SIG_BLOCK, &set, &oset);
         pid = fork();
         if (pid == -1) PERROR_DIE("fork");
         if (pid == 0) { // Child process
             if (execvp(node->argv[0], node->argv) == -1) PERROR_DIE("execvp");
             return 0;
         }
+        sigprocmask(SIG_SETMASK, &oset, NULL);
         LOG("Child Process PID: %d", pid);
+        cur_pid = pid;
         return 0;
     }
 
@@ -118,13 +124,33 @@ int invoke_line(char *line) {
     return exit_status;
 }
 
-void handler(int sig) {
-    LOG("SIGCHLD received: %d\n", sig);
+void stop_process(int sig) {
+    LOG("SIGTSTP received: %d", sig);
+    kill(cur_pid, SIGTSTP);
+    return;
+}
+
+void collect_zombie(int sig) {
+    LOG("SIGCHLD received: %d", sig);
+    int status;
+    pid_t pid;
+    pid = waitpid(-1, &status, WNOHANG);
+    /* LOG("pid = %d, status = %d", pid, WIFEXITED(status)); */
+    if (pid > 0 && WIFEXITED(status)) write(STDERR_FILENO, fire, strlen(fire));
+    pid = waitpid(-1, &status, WNOHANG);
+    /* LOG("pid = %d, status = %d", pid, WIFEXITED(status)); */
+    if (pid > 0 && WIFEXITED(status)) write(STDERR_FILENO, fire, strlen(fire));
+    pid = waitpid(-1, &status, WNOHANG);
+    /* LOG("pid = %d, status = %d", pid, WIFEXITED(status)); */
+    if (pid > 0 && WIFEXITED(status)) write(STDERR_FILENO, fire, strlen(fire));
     return;
 }
 
 int main(int argc, char **argv) {
-    signal(SIGCHLD, handler);
+    sigemptyset(&set);
+    sigaddset(&set, SIGTSTP);
+    signal(SIGCHLD, collect_zombie);
+    signal(SIGTSTP, stop_process);
     parse_options(argc, argv);
     if (optind < argc) {
         /* Execute each cmdline in the arguments if exists */
