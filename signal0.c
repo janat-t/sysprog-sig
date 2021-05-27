@@ -14,9 +14,9 @@ void alarm_handler(int sig) {
 int main() {
     /* Exercise 1: Implement here. */
     signal(SIGINT, handler);
-    signal(SIGALRM, alarm_handler);
 
     /* Exercise 2: Implement here. */
+    signal(SIGALRM, alarm_handler);
     alarm(5);
 
     /* Prints dots. */

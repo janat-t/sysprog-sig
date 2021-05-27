@@ -23,29 +23,102 @@ Ubuntu 20.04.2 LTS
 ### Exercise1 ### 課題1
 ### ^Cを打っても止まらない様子を実演し，その入出力結果（^Cを明示すること）を貼り付けましょう．
 
-
+❯ ./signal0
+..^C..^C.^C^C^C^C^C.......^\[1]    119940 quit (core dumped)  ./signal0
 
 ### Exercise2 ### 課題2
 ### 実行を適当なところで止め，実行結果を貼り付けましょう．
 
+❯ ./signal0
+...^C*.^C.^C^C..*...^C^C.*...^\[1]    120099 quit (core dumped)  ./signal0
 
+❯ ./signal0
+...*....*....*....*....*....*..^\[1]    120181 quit (core dumped)  ./signal0
 
 ### Exercise3 ### 課題3
 ### 実装完了したことを示すための適当な入出力結果を貼り付けましょう（./main -q で実行，ttshプロンプトを含む）．
 ### 未完成部分がある場合は明示して下さい．
 
-
+❯ ./main -q
+ttsh[1] 🐦 ./count 10&
+ttsh[2] 🐦 ./count 5&
+ttsh[3] 🐦 3 3 2 2 1 1 🧟 🔥
+🧟 🔥
+ls -la
+total 260
+drwxrwxr-x 4 janat janat  4096 May 27 21:50 .
+drwxrwxr-x 3 janat janat  4096 May 26 01:30 ..
+drwxrwxr-x 8 janat janat  4096 May 27 21:50 .git
+-rw-rw-r-- 1 janat janat    42 May 26 01:30 .gitignore
+-rw-rw-r-- 1 janat janat  1518 May 26 01:30 Makefile
+-rw-rw-r-- 1 janat janat    14 May 26 01:30 README.md
+-rwxrwxr-x 1 janat janat 16808 May 26 01:32 count
+-rw-rw-r-- 1 janat janat  1420 May 26 01:30 count.c
+-rw-rw-r-- 1 janat janat 45947 May 26 01:30 lex.yy.c
+-rw-rw-r-- 1 janat janat  1670 May 26 01:30 logger.c
+-rwxrwxr-x 1 janat janat 43432 May 27 21:50 main
+-rw-rw-r-- 1 janat janat  4821 May 27 21:50 main.c
+-rw-rw-r-- 1 janat janat  1956 May 26 01:30 main.h
+-rw-rw-r-- 1 janat janat  4224 May 26 01:30 node.c
+-rw-rw-r-- 1 janat janat   146 May 26 01:30 parse.y
+-rwxrwxr-x 1 janat janat   817 May 26 01:30 pty.rb
+-rw-rw-r-- 1 janat janat  2145 May 27 21:50 report.txt
+-rw-rw-r-- 1 janat janat   146 May 26 01:30 scan.l
+-rwxrwxr-x 1 janat janat 16624 May 27 21:40 signal0
+-rw-rw-r-- 1 janat janat   548 May 27 21:40 signal0.c
+drwxrwxr-x 2 janat janat  4096 May 26 01:30 t
+-rwxrwxr-x 1 janat janat  1676 May 26 01:30 test.sh
+-rw-rw-r-- 1 janat janat 43277 May 26 01:30 y.tab.c
+-rw-rw-r-- 1 janat janat  3271 May 26 01:30 y.tab.h
+🔥
+ttsh[4] 🐦 ./count 20&
+ttsh[5] 🐦 ps
+    PID TTY          TIME CMD
+  58805 pts/1    00:00:08 zsh
+  58810 pts/1    00:00:00 zsh
+  58838 pts/1    00:00:06 gitstatusd-linu
+  58839 pts/1    00:00:00 zsh
+  58842 pts/1    00:00:01 zsh
+ 119248 pts/1    00:00:07 vim
+ 121186 pts/1    00:00:00 zsh
+ 121190 pts/1    00:00:00 zsh
+ 121220 pts/1    00:00:00 gitstatusd-linu
+ 121221 pts/1    00:00:00 zsh
+ 121222 pts/1    00:00:00 zsh
+ 121286 pts/1    00:00:00 main
+ 121292 pts/1    00:00:00 count
+ 121293 pts/1    00:00:00 ps
+🔥
+ttsh[6] 🐦 3 2 1 🧟 🔥
+ps
+    PID TTY          TIME CMD
+  58805 pts/1    00:00:08 zsh
+  58810 pts/1    00:00:00 zsh
+  58838 pts/1    00:00:06 gitstatusd-linu
+  58839 pts/1    00:00:00 zsh
+  58842 pts/1    00:00:01 zsh
+ 119248 pts/1    00:00:07 vim
+ 121186 pts/1    00:00:00 zsh
+ 121190 pts/1    00:00:00 zsh
+ 121220 pts/1    00:00:00 gitstatusd-linu
+ 121221 pts/1    00:00:00 zsh
+ 121222 pts/1    00:00:00 zsh
+ 121286 pts/1    00:00:00 main
+ 121295 pts/1    00:00:00 ps
+🔥
+ttsh[7] 🐦 %
 
 ### Exercise3-test ###
 ### make test3 の結果を貼り付けましょう．
 
-
+❯ make test3
+✅  OK 🎉 [3-count] env NO_EMOJI=1 ruby pty.rb ./main -q < t/3-in.txt
 
 ### ExerciseA ### 発展課題A
 ### 実装完了したことを示すための適当な入出力結果を貼り付けましょう（./main -q で実行，ttshプロンプトを含む）．
 ### 未完成部分がある場合は明示して下さい．
 
-
+I could send the signal to the child process from the parent process. But I could not make the child process handle the signal differently from the parent process yet.
 
 ### ExerciseA-test ###
 ### make testA の結果を貼り付けて下さい．

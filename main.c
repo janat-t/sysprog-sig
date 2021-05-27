@@ -49,14 +49,12 @@ int invoke_node(node_t *node) {
     // Checks whether the command is executed with '&'
     if (node->async) {
         LOG("{&} found: async execution required");
-        sigprocmask(SIG_BLOCK, &set, &oset);
         pid = fork();
         if (pid == -1) PERROR_DIE("fork");
         if (pid == 0) { // Child process
             if (execvp(node->argv[0], node->argv) == -1) PERROR_DIE("execvp");
             return 0;
         }
-        sigprocmask(SIG_SETMASK, &oset, NULL);
         LOG("Child Process PID: %d", pid);
         cur_pid = pid;
         return 0;
@@ -64,6 +62,7 @@ int invoke_node(node_t *node) {
 
     // generates a child process
     fflush(stdout);
+    sigprocmask(SIG_BLOCK, &set, &oset);
     pid = fork();
     if (pid == -1) PERROR_DIE("fork");
 
@@ -72,6 +71,9 @@ int invoke_node(node_t *node) {
         if (execvp(node->argv[0], node->argv) == -1) PERROR_DIE("execvp");
         return 0; /* never happen */
     }
+    LOG("Child Process PID: %d", pid);
+    cur_pid = pid;
+    sigprocmask(SIG_SETMASK, &oset, NULL);
 
     // assign an independent process group
     if (setpgid(pid, pid) == -1) PERROR_DIE("setpgid");
