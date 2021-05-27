@@ -3,13 +3,13 @@
 ### 課題Nの回答は，### ExerciseN ### のコメント行の下の領域に記述して下さい．
 
 ### ID ### 学籍番号を nnBnnnnn のように書いて下さい
-
+19B60096
 
 ### Email ### mメールアドレスを書いて下さい
-
+taerakul.j.aa@m.titech.ac.jp
 
 ### Name ### 氏名を「東工 太郎」のように書いて下さい
-
+Taerakul Janat
 
 ### Env ### 演習実施環境（OSとその上でのUNIX環境）を明らかにして下さい
 ### 例：repl.it
@@ -18,7 +18,7 @@
 ### 例：macOS 10.15 on Intel Mac
 ### 例：macOS 10.16 on M1 Mac
 ### 例：Ubuntu Linux 20.04
-
+Ubuntu 20.04.2 LTS
 
 ### Exercise1 ### 課題1
 ### ^Cを打っても止まらない様子を実演し，その入出力結果（^Cを明示すること）を貼り付けましょう．
